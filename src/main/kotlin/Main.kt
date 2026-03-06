@@ -162,14 +162,14 @@ public fun loopOperations() {
     println("Number entered are: $list");
 
     var sum = 0;
+    // just like foreach
     for (number in list) {
         sum += number;
     }
     println("Total sum of numbers: $sum");
 
-    for(idx in 0 until list.size) {
-        if(list[idx]%2 == 0) {
-            println("number at #${idx+1}: ${list[idx]}");
-        }
+    // use step to increment as per specified incremental value
+    for(idx in 0 until list.size step 2) {
+        println("number at #${idx+1}: ${list[idx]}");
     }
 }
