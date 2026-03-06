@@ -7,7 +7,9 @@ fun main() {
 //    ifElseCondition();
 //    whenExpression();
 //    switchFunction();
-    exceptionHandling();
+//    exceptionHandling();
+//    arrayOperations();
+    loopOperations();
 }
 
 /**
@@ -119,4 +121,55 @@ public fun exceptionHandling() {
     }
 
     println("Number entered is: $number");
+}
+
+/**
+ * To perform Array operations
+ */
+public fun arrayOperations() {
+    // Array index starts from 0
+    val intArray = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+    println("Array length is: ${intArray.size}");
+    println("Array first element is: ${intArray.first()}");
+    println("Array last element is: ${intArray.last()}");
+    println("Array last index is: ${intArray.lastIndex}");
+
+    // Equivalent of ArrayList in C#
+    var array = arrayOf(-1 ,1, "one", "two", 3.0, 4.123, true, "six") + false;
+    array += 'u';
+    println("Array length is: ${array.size}");
+    println("Array first element is: ${array.first()}");
+    println("Array last element is: ${array.last()}");
+    println("Array last index is: ${array.lastIndex}");
+}
+
+/**
+ * To perform loop operations
+ */
+public fun loopOperations() {
+    println("How many numbers you want to enter: ");
+    var input = readln().toIntOrNull() ?: 0;
+
+    var index = 0;
+    var list = mutableListOf<Int>();
+    while (index < input) {
+        println("Enter the number #${index+1}");
+        val number = readln().toIntOrNull() ?: continue;
+        list.add(number);
+        index++;
+    }
+    println("Number entered are: $list");
+
+    var sum = 0;
+    for (number in list) {
+        sum += number;
+    }
+    println("Total sum of numbers: $sum");
+
+    for(idx in 0 until list.size) {
+        if(list[idx]%2 == 0) {
+            println("number at #${idx+1}: ${list[idx]}");
+        }
+    }
 }
