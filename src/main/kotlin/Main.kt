@@ -1,5 +1,7 @@
 package org.example
 
+import kotlin.math.PI
+
 fun main() {
     println("Hello World!");
 //    println(arithmetic());
@@ -9,7 +11,11 @@ fun main() {
 //    switchFunction();
 //    exceptionHandling();
 //    arrayOperations();
-    loopOperations();
+//    loopOperations();
+//    reverseString();
+//    classOperations();
+//    interfaceAndAbstractClassImplementation();
+    classInheritanceImplementation();
 }
 
 /**
@@ -43,7 +49,7 @@ public fun readWrite() {
 
     println("Enter a Number: ");
     // to have null value assigned if not integer
-    // to convert nullable type to non-nullable type, use : !!
+    // to convert nullable type to non-nullable type, use: !!
     // ?: Also known as elvis operator in kotlin, similar to null-collision operator
     val number = readln().toIntOrNull() ?: 0;
     println("Number entered is: $number");
@@ -171,5 +177,231 @@ public fun loopOperations() {
     // use step to increment as per specified incremental value
     for(idx in 0 until list.size step 2) {
         println("number at #${idx+1}: ${list[idx]}");
+    }
+}
+
+/**
+ * Reverse a string using for loop
+ * Example of Extension method
+ * Example of Lambda functions
+ */
+public fun reverseString() {
+    println("Enter a string:");
+    val input = readln();
+    println(getReverseString(input));
+    //    example of using named parameters
+    //    println(getReverseString(input = input));
+
+    println(input.getAlternateLetters());
+
+    // Approach-1 Lambda function
+    println(input.myLambdaFunction {
+            ch -> ch.isDigit();
+    });
+
+    // Approach-2 Lambda function
+    println(input.myLambdaFunction_Approach2 {
+        // cannot write like this
+        // ch -> ch.isLetter();
+        isLetter();
+    })
+}
+
+/**
+ * function getReverseString has default value parameter
+ */
+private fun getReverseString(input: String = "Default Value"): String {
+    val result = buildString {
+        for(i in input.lastIndex downTo 0) {
+            append(input[i]);
+        }
+    }
+
+    return result;
+}
+
+/**
+ * Example of extension method
+ */
+private fun String.getAlternateLetters(): String {
+    val result = buildString {
+        for(i in this@getAlternateLetters.indices step 2) {
+            append(this@getAlternateLetters[i]);
+        }
+    }
+
+    return  result;
+}
+
+/**
+ * Custom Lambda Function
+ */
+private fun String.myLambdaFunction(predicate: (Char) -> Boolean): String {
+    return buildString {
+        for(ch in this@myLambdaFunction) {
+            if(predicate(ch)) {
+                append(ch);
+            }
+        }
+    }
+}
+
+/**
+ * Custom Lambda Function
+ */
+private fun String.myLambdaFunction_Approach2(predicate: Char.() -> Boolean): String {
+    return buildString {
+        for(ch in this@myLambdaFunction_Approach2) {
+            if(ch.predicate()) {
+                append(ch);
+            }
+        }
+    }
+}
+
+/**
+ * class & data class operation
+ */
+public fun classOperations() {
+    // creating class object
+    val sampleClassObject = SampleClass(10, 20);
+    val sampleDataClassObject = SampleDataClass(10, 20);
+
+    // basic operations
+    println("Sample Class: object1: ${sampleClassObject.object1} | object2: ${sampleClassObject.object2}");
+    println("Sample Class: Sum of Objects: ${sampleClassObject.Sum} | Product of Objects: ${sampleClassObject.multiply()}");
+
+    println("Sample Data Class: object1: ${sampleDataClassObject.object1} | object2: ${sampleDataClassObject.object2}");
+    println("Sample Data Class: Sum of Objects: ${sampleDataClassObject.Sum} | Product of Objects: ${sampleDataClassObject.multiply()}");
+
+    // check equivalent
+    val sampleClassObject_twin = SampleClass(10, 20);
+    val sampleDataClassObject_twin = SampleDataClass(10, 20);
+
+    println("sampleClassObject == sampleClassObject_twin: ${sampleClassObject == sampleClassObject_twin}");
+    println("sampleClassObject === sampleClassObject_twin: ${sampleClassObject === sampleClassObject_twin}");
+    println("sampleDataClassObject == sampleDataClassObject_twin: ${sampleDataClassObject == sampleDataClassObject_twin}");
+    println("sampleDataClassObject === sampleDataClassObject_twin: ${sampleDataClassObject === sampleDataClassObject_twin}");
+}
+
+class SampleClass(val object1: Int, val object2: Int) {
+    val Sum = object1 + object2;
+
+    public fun multiply(): Int {
+        return object1 * object2;
+    }
+}
+
+data class SampleDataClass(val object1: Int, val object2: Int) {
+    val Sum = object1 + object2;
+
+    public fun multiply(): Int {
+        return object1 * object2;
+    }
+}
+
+/**
+ * To demonstrate interface & abstract class implementation
+ */
+public fun interfaceAndAbstractClassImplementation() {
+
+    val circle = Circle(5.0);
+    val square = Square(5.0);
+
+    println("Sum of Areas:" + sumOfAreas(circle, square));
+    println("Sum of Parameters: ${sumOfParameters(circle, square)}");
+
+    circle.unImplementedFunction();
+    circle.implementedFunction();
+
+    square.unImplementedFunction();
+    square.implementedFunction();
+}
+
+private fun sumOfAreas(vararg shapes: Shape): Double {
+    return shapes.sumOf {
+        shape -> shape.area();
+    };
+}
+
+private fun sumOfParameters(vararg shapes: Shape): Double {
+    return shapes.sumOf {
+            shape -> shape.parameter;
+    };
+}
+
+interface Shape {
+    val parameter: Double;
+    fun area(): Double;
+}
+
+abstract class SampleAbstractClass {
+    abstract fun unImplementedFunction(): Unit;
+
+    fun implementedFunction(): Unit {
+        println("This is an Implemented function from Abstract Class");
+    }
+}
+
+class Circle(private val radius: Double) : Shape, SampleAbstractClass() {
+    override val parameter: Double
+        get() = 2 * PI * radius;
+
+    override fun area(): Double {
+        return PI * Math.pow(radius, 2.0);
+    }
+
+    override fun unImplementedFunction(): Unit {
+        println("This is a non-Implemented function from Circle Class");
+    }
+}
+
+class Square(private val side: Double) : Shape, SampleAbstractClass() {
+    override val parameter: Double
+        get() = 4 * side;
+
+    override fun area(): Double {
+        return Math.pow(side, 2.0);
+    }
+
+    override fun unImplementedFunction(): Unit {
+        println("This is a non-Implemented function from Square Class");
+    }
+}
+
+/**
+ * to demonstrate class inheritance
+ */
+public fun classInheritanceImplementation(): Unit {
+    val firstClass = FirstClass();
+    val separateClass = SeparateClass();
+
+    firstClass.openFunctionToBeModified();
+    firstClass.openFunctionToBeUnmodified();
+
+    separateClass.normalFunction();
+    separateClass.openFunctionToBeModified();
+    separateClass.openFunctionToBeUnmodified();
+}
+
+class FirstClass : SeparateClass() {
+    override fun openFunctionToBeModified() {
+        println("This is a open function from FirstClass that has been modified");
+    }
+}
+
+// class can only be inherited if marked as open
+open class SeparateClass {
+    fun normalFunction(): Unit {
+        println("This is a normal function from separate open class");
+    }
+
+    // methods can only be override if marked as open
+    open fun openFunctionToBeUnmodified(): Unit {
+        println("This is a open function from separate open class that remain unmodified");
+    }
+
+    open fun openFunctionToBeModified(): Unit {
+        println("This is a open function from separate open class that can be modified");
     }
 }
