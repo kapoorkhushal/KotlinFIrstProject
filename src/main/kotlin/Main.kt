@@ -15,7 +15,8 @@ fun main() {
 //    reverseString();
 //    classOperations();
 //    interfaceAndAbstractClassImplementation();
-    classInheritanceImplementation();
+//    classInheritanceImplementation();
+    sealedInterfaceDemo();
 }
 
 /**
@@ -403,5 +404,45 @@ open class SeparateClass {
 
     open fun openFunctionToBeModified(): Unit {
         println("This is a open function from separate open class that can be modified");
+    }
+}
+
+/**
+ * To demonstrate sealed classes & Interfaces
+ * Sealed classes are same as sealed interfaces
+ */
+public fun sealedInterfaceDemo(): Unit {
+    val car = Car();
+    val bike = Bike();
+
+    println(checkVehicleType(car));
+    println(checkVehicleType(bike));
+}
+
+private fun checkVehicleType(vehicle: Vehicle): String {
+    val result = when(vehicle) {
+        is Car -> vehicle.displayType();
+        is Bike -> vehicle.displayType();
+        // we do not need else statement; because interface Vehicle is sealed;
+        // It means, its types are defined
+        // else -> "unidentified object";
+    }
+
+    return result;
+}
+
+sealed interface Vehicle {
+    fun displayType(): String;
+}
+
+class Car: Vehicle {
+    override fun displayType(): String {
+        return "This is a Car!";
+    }
+}
+
+class Bike: Vehicle {
+    override fun displayType():String {
+        return "This is a Bike!";
     }
 }
