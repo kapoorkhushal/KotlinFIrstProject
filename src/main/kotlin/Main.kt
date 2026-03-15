@@ -1,5 +1,4 @@
 package org.example
-
 import kotlin.math.PI
 
 fun main() {
@@ -14,9 +13,9 @@ fun main() {
 //    loopOperations();
 //    reverseString();
 //    classOperations();
-//    interfaceAndAbstractClassImplementation();
+//    interfaceAbstractClassDataObjectImplementation();
 //    classInheritanceImplementation();
-    sealedInterfaceDemo();
+//    sealedInterfaceDemo();
 }
 
 /**
@@ -262,6 +261,8 @@ private fun String.myLambdaFunction_Approach2(predicate: Char.() -> Boolean): St
 
 /**
  * class & data class operation
+ * access specifiers in kotlin are similar to C#
+ * like: private, protected, public & internal
  */
 public fun classOperations() {
     // creating class object
@@ -270,12 +271,14 @@ public fun classOperations() {
 
     // basic operations
     println("Sample Class: object1: ${sampleClassObject.object1} | object2: ${sampleClassObject.object2}");
-    println("Sample Class: Sum of Objects: ${sampleClassObject.Sum} | Product of Objects: ${sampleClassObject.multiply()}");
+    println("Sample Class: Sum of Objects: ${sampleClassObject.sum} | Product of Objects: ${sampleClassObject.multiply()}");
 
     println("Sample Data Class: object1: ${sampleDataClassObject.object1} | object2: ${sampleDataClassObject.object2}");
     println("Sample Data Class: Sum of Objects: ${sampleDataClassObject.Sum} | Product of Objects: ${sampleDataClassObject.multiply()}");
 
     // check equivalent
+    // even for 2 diff instances; data class gives true for equals (==);
+    // because it always compares the data of the class objects
     val sampleClassObject_twin = SampleClass(10, 20);
     val sampleDataClassObject_twin = SampleDataClass(10, 20);
 
@@ -286,7 +289,8 @@ public fun classOperations() {
 }
 
 class SampleClass(val object1: Int, val object2: Int) {
-    val Sum = object1 + object2;
+    // default access specifier is public in Kotlin
+    val sum = object1 + object2;
 
     public fun multiply(): Int {
         return object1 * object2;
@@ -304,7 +308,7 @@ data class SampleDataClass(val object1: Int, val object2: Int) {
 /**
  * To demonstrate interface & abstract class implementation
  */
-public fun interfaceAndAbstractClassImplementation() {
+public fun interfaceAbstractClassDataObjectImplementation() {
 
     val circle = Circle(5.0);
     val square = Square(5.0);
@@ -317,6 +321,13 @@ public fun interfaceAndAbstractClassImplementation() {
 
     square.unImplementedFunction();
     square.implementedFunction();
+
+    // This is not possible -> val triangle = Triangle();
+    // Triangle is a data object; just like static in C#
+    println(Triangle.parameter);
+    println(Triangle.area());
+    Triangle.unImplementedFunction();
+    Triangle.implementedFunction();
 }
 
 private fun sumOfAreas(vararg shapes: Shape): Double {
@@ -367,6 +378,23 @@ class Square(private val side: Double) : Shape, SampleAbstractClass() {
 
     override fun unImplementedFunction(): Unit {
         println("This is a non-Implemented function from Square Class");
+    }
+}
+
+/**
+ * data object are similar to Static classes in C#; means only single instance is shared across the program
+ * Catch: data objects do not have constructors; so Triangle(private val side: Double) -> is not possible
+ */
+data object Triangle: Shape, SampleAbstractClass() {
+    override val parameter: Double
+        get() = 30.0;
+
+    override fun area(): Double {
+        return 30.0;
+    }
+
+    override fun unImplementedFunction(): Unit {
+        println("This is a non-Implemented function from Triangle data object");
     }
 }
 
@@ -445,4 +473,49 @@ class Bike: Vehicle {
     override fun displayType():String {
         return "This is a Bike!";
     }
+}
+
+/**
+ * default Enum classes
+ */
+public enum class EnumClass {
+    ENUM1,
+    ENUM2,
+    ENUM3
+}
+
+/**
+ * value based Enum classes
+ */
+public enum class ValueBasedEnumClass(val value: String) {
+    ENUM1("enum1"),
+    ENUM2("enum2"),
+    ENUM3("enum3")
+}
+
+/**
+ * An example of generic function
+ */
+fun <T> List<T>.myGenericFunction(predicate: (T) -> Boolean): List<T> {
+
+    // val result = listOf<T>();
+    // listOf cannot be used; because it's immutable i.e. that cannot be edited after creation
+    // i.e. elements cannot be added, removed, or changed after creation
+    val result = mutableListOf<T>();
+
+    for(element in this) {
+        if(predicate(element)) {
+            result.add(element);
+        }
+    }
+
+    return result;
+}
+
+/**
+ * An example of generic interface
+ */
+interface Outcome<out S, out E> {
+    data class Success<S>(val data: S): Outcome<S, Nothing>;
+    data class Error<E>(val error: E): Outcome<Nothing, E>;
 }
